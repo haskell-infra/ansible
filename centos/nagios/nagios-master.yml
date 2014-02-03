@@ -1,0 +1,40 @@
+- name: Deploy nagios master server
+  hosts: relrod-monitor1
+  user: relrod
+  sudo: yes
+  sudo_user: root
+
+  tasks:
+  - include: ../tasks/httpd.yml
+
+  - name: Install nagios + deps ({{item}})
+    yum: state=installed pkg={{item}}
+    with_items:
+    - nagios
+    - nagios-plugins-all
+    - nagios-plugins-nrpe # Why isn't this in -all?
+    - php
+
+  - name: Copy main config
+    copy: src=templates/nagios.cfg dest=/etc/nagios/nagios.cfg
+
+  - name: Copy object config ({{item}})
+    copy: src=templates/{{item}} dest=/etc/nagios/objects/{{item}}
+    with_items:
+    - hostgroups.cfg
+    - commands.cfg
+    - contacts.cfg
+    - timeperiods.cfg
+    - templates.cfg
+
+  - name: Copy locally run actions
+    copy: src=templates/local-checks/ dest=/etc/nagios/objects/local-checks
+
+  - name: Copy non-NRPE host configs
+    copy: src=templates/non-nrpe-hosts/ dest=/etc/nagios/objects/non-nrpe-hosts
+
+  - name: Configure nagios service
+    service: name=nagios state=started enabled=yes
+
+  # This has to be after the nagios service exists.
+  - include: ../tasks/everything.yml

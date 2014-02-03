@@ -1,0 +1,11 @@
+- name: Install httpd
+  yum: state=latest pkg=httpd
+
+- name: Allow http and https ports
+  command: lokkit --service={{item}}
+  with_items:
+  - https
+  - http
+
+- name: Enable httpd and start it
+  service: name=httpd state=started enabled=yes

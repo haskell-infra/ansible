@@ -1,0 +1,7 @@
+- include: ../nrpe/tasks/nrpe-node.yml
+
+- name: Install NTP Server
+  yum: pkg=ntp state=installed
+
+- name: Configure NTP Server as a service
+  service: name=ntpd state=started enabled=yes
