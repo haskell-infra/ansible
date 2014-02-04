@@ -15,12 +15,12 @@
 
 - name: Create directory for host info on nagios host
   file: path=/etc/nagios/hosts state=directory
-  delegate_to: relrod-monitor1
+  delegate_to: monitor.haskell.org
 
 - name: Inform nagios about the new node
   template: src=../templates/hosts/{{inventory_hostname}}.cfg dest=/etc/nagios/hosts/{{inventory_hostname}}.nrpe.cfg mode=0644
-  delegate_to: relrod-monitor1
+  delegate_to: monitor.haskell.org
 
 - name: Rehash nagios
   service: name=nagios enabled=yes state=reloaded
-  delegate_to: relrod-monitor1
+  delegate_to: monitor.haskell.org

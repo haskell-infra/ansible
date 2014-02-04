@@ -1,5 +1,5 @@
 - name: Deploy nagios master server
-  hosts: relrod-monitor1
+  hosts: monitor.haskell.org
   user: relrod
   sudo: yes
   sudo_user: root
