@@ -7,6 +7,9 @@
   tasks:
   - include: ../tasks/httpd.yml
 
+  - name: Get haskell-infra copr repo
+    get_url: url=http://copr.fedoraproject.org/coprs/codeblock/haskell-infra/repo/epel-6-x86_64/ dest=/etc/yum.repos.d/haskell-infra.repo mode=0644
+
   - name: Install nagios + deps ({{item}})
     yum: state=installed pkg={{item}}
     with_items:
@@ -14,6 +17,9 @@
     - nagios-plugins-all
     - nagios-plugins-nrpe # Why isn't this in -all?
     - php
+    - supervisord # for HaskNag bot
+    - hasknag     # for HaskNag bot
+    - nc          # for HaskNag bot
 
   - name: Copy main config
     copy: src=templates/nagios.cfg dest=/etc/nagios/nagios.cfg
@@ -38,3 +44,9 @@
 
   # This has to be after the nagios service exists.
   - include: ../tasks/everything.yml
+
+  - name: Copy supervisord config
+    copy: src=templates/supervisord.conf dest=/etc/supervisord.conf
+
+  - name: Configure supervisord service
+    service: name=supervisord state=started enabled=yes
