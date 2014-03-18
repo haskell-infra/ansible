@@ -17,9 +17,9 @@
     - nagios-plugins-all
     - nagios-plugins-nrpe # Why isn't this in -all?
     - php
-    - supervisord # for HaskNag bot
-    - hasknag     # for HaskNag bot
-    - nc          # for HaskNag bot
+    - supervisor # for HaskNag bot
+    - hasknag    # for HaskNag bot
+    - nc         # for HaskNag bot
 
   - name: Copy main config
     copy: src=templates/nagios.cfg dest=/etc/nagios/nagios.cfg
