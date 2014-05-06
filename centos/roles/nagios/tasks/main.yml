@@ -38,3 +38,9 @@
 
 - name: Configure supervisord service
   service: name=supervisord state=started enabled=yes
+
+- name: Set redirect from / to /nagios
+  copy: src=nagios-redirect.conf dest=/etc/httpd/conf.d/nagios-redirect.conf
+
+- name: Restart apache
+  command: service httpd graceful
