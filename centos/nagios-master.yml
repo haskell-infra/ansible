@@ -1,0 +1,11 @@
+- name: Deploy nagios master server
+  hosts: monitor.haskell.org
+  user: relrod
+  sudo: yes
+  sudo_user: root
+
+  roles:
+  - global
+  - httpd
+  - nagios
+  - nrpe

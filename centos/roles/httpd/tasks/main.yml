@@ -1,0 +1,20 @@
+- name: Install httpd
+  yum: state=latest pkg=httpd
+
+- name: Allow http and https ports
+  command: lokkit --service={{item}}
+  with_items:
+  - https
+  - http
+
+- name: Enable status
+  copy: src=status.conf dest=/etc/httpd/conf.d/status.conf
+
+- command: curl -4 "http://da.gd/ip?strip=1"
+  register: ipaddr
+
+- name: Enable datadog apache config
+  template: src=apache.yaml dest=/etc/dd-agent/conf.d/apache.yaml
+
+- name: Enable httpd and start it
+  service: name=httpd state=started enabled=yes

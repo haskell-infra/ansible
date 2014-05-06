@@ -1,0 +1,40 @@
+- name: Get haskell-infra copr repo
+  get_url: url=http://copr.fedoraproject.org/coprs/codeblock/haskell-infra/repo/epel-6-x86_64/ dest=/etc/yum.repos.d/haskell-infra.repo mode=0644
+
+- name: Install nagios + deps ({{item}})
+  yum: state=installed pkg={{item}}
+  with_items:
+  - nagios
+  - nagios-plugins-all
+  - nagios-plugins-nrpe # Why isn't this in -all?
+  - php
+  - supervisor # for HaskNag bot
+  - hasknag    # for HaskNag bot
+  - nc         # for HaskNag bot
+
+- name: Copy main config
+  copy: src=nagios.cfg dest=/etc/nagios/nagios.cfg
+
+- name: Copy object config ({{item}})
+  copy: src={{item}} dest=/etc/nagios/objects/{{item}}
+  with_items:
+  - hostgroups.cfg
+  - commands.cfg
+  - contacts.cfg
+  - timeperiods.cfg
+  - templates.cfg
+
+- name: Copy locally run actions
+  copy: src=local-checks/ dest=/etc/nagios/objects/local-checks
+
+- name: Copy non-NRPE host configs
+  copy: src=non-nrpe-hosts/ dest=/etc/nagios/objects/non-nrpe-hosts
+
+- name: Configure nagios service
+  service: name=nagios state=started enabled=yes
+
+- name: Copy supervisord config
+  copy: src=supervisord.conf dest=/etc/supervisord.conf
+
+- name: Configure supervisord service
+  service: name=supervisord state=started enabled=yes

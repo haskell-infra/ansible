@@ -1,5 +1,3 @@
-- include: ../nrpe/tasks/nrpe-node.yml
-
 - name: Install NTP Server
   yum: pkg=ntp state=installed
 

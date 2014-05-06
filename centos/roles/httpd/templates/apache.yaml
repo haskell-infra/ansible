@@ -1,0 +1,4 @@
+init_config:
+
+instances:
+    -   apache_status_url: http://{{ipaddr.stdout}}/server-status?auto
