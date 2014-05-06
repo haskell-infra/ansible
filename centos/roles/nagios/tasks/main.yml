@@ -44,3 +44,12 @@
 
 - name: Restart apache
   command: service httpd graceful
+
+- name: Check for dd-agent user
+  command: getent passwd | grep -q dd-agent
+  register: ddagent
+  ignore_errors: true
+
+- name: Add dd-agent to nagios group
+  user: name=dd-agent groups=nagios append=yes
+  when: ddagent|success
