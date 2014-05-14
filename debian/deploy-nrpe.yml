@@ -1,0 +1,14 @@
+- name: Gather monitor.haskell.org facts
+  hosts: monitor.haskell.org
+  user: relrod
+  sudo: yes
+  sudo_user: root
+
+- name: Deploy NRPE
+  hosts: "{{ target }}"
+  user: relrod
+  sudo: yes
+  sudo_user: root
+
+  roles:
+  - nrpe-debian

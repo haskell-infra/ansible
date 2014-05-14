@@ -8,7 +8,7 @@
   file: path=/etc/nagios state=directory
 
 - name: Sync nrpe template
-  template: src=../templates/nrpe.cfg dest=/etc/nagios/nrpe.cfg
+  template: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg
 
 - name: Enable and restart nrpe to load new config
   service: name=nagios-nrpe-server enabled=yes state=restarted
@@ -18,7 +18,7 @@
   delegate_to: monitor.haskell.org
 
 - name: Inform nagios about the new node
-  template: src=../templates/hosts/{{inventory_hostname}}.cfg dest=/etc/nagios/hosts/{{inventory_hostname}}.nrpe.cfg mode=0644
+  template: src=hosts/{{inventory_hostname}}.cfg dest=/etc/nagios/hosts/{{inventory_hostname}}.nrpe.cfg mode=0644
   delegate_to: monitor.haskell.org
 
 - name: Rehash nagios
