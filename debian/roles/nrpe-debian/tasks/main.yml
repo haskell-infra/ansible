@@ -21,6 +21,10 @@
   template: src=hosts/{{inventory_hostname}}.cfg dest=/etc/nagios/hosts/{{inventory_hostname}}.nrpe.cfg mode=0644
   delegate_to: monitor.haskell.org
 
+- name: Delete the non-nrpe nagios template, if it exists
+  file: name=/etc/nagios/objects/non-nrpe-hosts/{{inventory_hostname}}.cfg state=absent
+  delegate_to: monitor.haskell.org
+
 - name: Rehash nagios
   service: name=nagios enabled=yes state=reloaded
   delegate_to: monitor.haskell.org
