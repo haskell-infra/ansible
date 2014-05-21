@@ -1,13 +1,13 @@
 - name: Gather monitor.haskell.org facts
   hosts: monitor.haskell.org
-  user: relrod
-  sudo: yes
+  user: "{% if cloud == 'true' %}root{% else %}relrod{% endif %}"
+  sudo: "{% if cloud == 'true' %}yes{% else %}no{% endif %}"
   sudo_user: root
 
 - name: Deploy NRPE
   hosts: "{{ target }}"
-  user: relrod
-  sudo: yes
+  user: "{% if cloud == 'true' %}root{% else %}relrod{% endif %}"
+  sudo: "{% if cloud == 'true' %}yes{% else %}no{% endif %}"
   sudo_user: root
 
   roles:
