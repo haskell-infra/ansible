@@ -21,10 +21,11 @@
   shell: "ufw status | head -n 1 | cut -d' ' -f2"
   ignore_errors: yes
   register: ufw_status
+  when: ansible_distribution == "Ubuntu"
 
 - name: Open ufw port
   ufw: rule=allow port=5666
-  when: ufw_status is defined and ufw_status.stdout.find("active") == 0
+  when: ansible_distribution == "Ubuntu" and ufw_status is defined and ufw_status.stdout.find("active") == 0
 
 - name: Enable and restart nrpe to load new config
   service: name=nagios-nrpe-server enabled=yes state=restarted
