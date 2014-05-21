@@ -11,4 +11,5 @@
   sudo_user: root
 
   roles:
+  - fix-lenny-sources
   - nrpe-debian
