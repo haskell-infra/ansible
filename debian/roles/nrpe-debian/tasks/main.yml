@@ -10,6 +10,9 @@
 - name: Sync nrpe template
   template: src=nrpe.cfg dest=/etc/nagios/nrpe.cfg
 
+- name: Copy custom plugins
+  copy: src=plugins/ dest=/usr/lib/nagios/plugins/ mode=0755
+
 - name: Enable and restart nrpe to load new config
   service: name=nagios-nrpe-server enabled=yes state=restarted
 
