@@ -1,0 +1,5 @@
+{
+  "phabricator.uri" : "https://phabricator.haskell.org",
+  "repository.callsign" : "A",
+  "project.name" : "ansible"
+}
