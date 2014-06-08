@@ -6,6 +6,6 @@
 
   roles:
   - global
-  - httpd
+  - nginx
   - nagios
   - nrpe

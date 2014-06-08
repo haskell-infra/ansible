@@ -1,0 +1,31 @@
+- name: Install nginx repo
+  copy: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo
+  tags:
+  - nginx
+
+- name: Install/update nginx
+  yum: state=latest pkg=nginx
+  tags:
+  - nginx
+
+- name: Remove /etc/nginx/conf.d since we don't use it
+  command: rm -rf /etc/nginx/conf.d/
+  tags:
+  - nginx
+
+- name: Allow http and https ports
+  command: lokkit --service={{item}}
+  with_items:
+  - https
+  - http
+  tags:
+  - nginx
+
+- command: curl -4 "http://da.gd/ip?strip=1"
+  register: ipaddr
+
+- name: Enable datadog nginx config
+  template: src=nginx.yaml dest=/etc/dd-agent/conf.d/nginx.yaml
+
+- name: Enable nginx and start it
+  service: name=nginx state=started enabled=yes

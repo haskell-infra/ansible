@@ -7,7 +7,8 @@
   - nagios
   - nagios-plugins-all
   - nagios-plugins-nrpe # Why isn't this in -all?
-  - php
+  - php-fpm
+  - perl-FCGI
   - supervisor # for HaskNag bot
   - hasknag    # for HaskNag bot
   - nc         # for HaskNag bot
@@ -39,17 +40,41 @@
 - name: Configure supervisord service
   service: name=supervisord state=started enabled=yes
 
-- name: Set redirect from / to /nagios
-  copy: src=nagios-redirect.conf dest=/etc/httpd/conf.d/nagios-redirect.conf
+- name: Set up php-fpm
+  copy: src=php-fpm.conf dest=/etc/php-fpm.d/www.conf
 
-- name: Restart apache
-  command: service httpd graceful
+- name: Install perl fcgi wrapper script
+  copy: src=fastcgi-wrapper.pl dest=/usr/local/bin/fastcgi-wrapper.pl mode=0755
+
+- name: Add perl fcgi wrapper script to upstart
+  copy: src=fastcgi-wrapper.conf dest=/etc/init/fastcgi-wrapper.conf
+
+- name: Configure nginx for nagios
+  copy: src=nagios-nginx.conf dest=/etc/nginx/nginx.conf
+  tags:
+  - nginx
+
+- name: Make sure the htpasswd file is readable by nginx
+  command: chown root.nginx /etc/nagios/passwd
+  tags:
+  - nginx
+
+- name: Restart nginx
+  command: service nginx reload
+  tags:
+  - nginx
+
+- name: Start fastcgi-wrapper
+  command: start fastcgi-wrapper
 
 - name: Check for dd-agent user
-  command: getent passwd | grep -q dd-agent
+  shell: getent passwd | grep -q dd-agent
   register: ddagent
   ignore_errors: true
 
 - name: Add dd-agent to nagios group
   user: name=dd-agent groups=nagios append=yes
   when: ddagent|success
+
+- name: Make sure apache is disabled
+  service: name=httpd state=stopped enabled=no
