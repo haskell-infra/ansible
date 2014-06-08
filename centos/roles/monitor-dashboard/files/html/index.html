@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Haskell.org metrics</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://monitor.haskell.org">Dashboard</a></l>
+            <li><a href="https://monitor.haskell.org/about.html">About</a></li>
+            <li><a href="https://monitor.haskell.org/nagios">Nagios</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Haskell.org metrics</a></li>
+            <li><a href="#">System load</a></li>
+            <li><a href="#">Networking stats</a></li>
+            <li><a href="#">I/O stats</a></li>
+            <li><a href="#">Nginx stats</a></li>
+            <li><a href="#">MariaDB stats</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Haskell.org Metrics</h1>
+
+          <h2 class="sub-header">Global system load</h2>
+          <div class="table-responsive">
+          </div>
+
+          <h2 class="sub-header">Global networking stats</h2>
+          <div class="table-responsive">
+          </div>
+
+          <h2 class="sub-header">Global I/O stats</h2>
+          <div class="table-responsive">
+          </div>
+
+          <h2 class="sub-header">Global Nginx stats</h2>
+          <div class="table-responsive">
+            <iframe src="https://app.datadoghq.com/graph/embed?token=d33fe5bbb119d0f011f2df2b02f4d97a1ec03cc47f2ddbb9c9386943e3c44287&height=300&width=600&legend=true" width="615" height="356" frameBorder="0"></iframe>
+
+            <iframe src="https://app.datadoghq.com/graph/embed?token=0545c7fdcd6ad1c46bd01cc2740ae2b7a806691ae2ca2da0dd0a7082d6069e8f&height=300&width=600&legend=true" width="615" height="356" frameBorder="0"></iframe>
+            <br/>
+
+            <iframe src="https://app.datadoghq.com/graph/embed?token=541756df0d1046a6a64c2972e07e72ab92f125411f6c1d60667155e9fb2f8dcb&height=300&width=600&legend=true" width="615" height="380" frameBorder="0"></iframe>
+          </div>
+
+          <h2 class="sub-header">Global MariaDB stats</h2>
+          <div class="table-responsive">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>

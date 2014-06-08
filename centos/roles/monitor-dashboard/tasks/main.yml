@@ -1,0 +1,4 @@
+- name: Deploy datadog public dashboard
+  copy: src=html/ dest=/usr/share/nginx/html/
+  tags:
+  - dashboard

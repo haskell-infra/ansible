@@ -6,6 +6,7 @@
 
   roles:
   - global
+  - monitor-dashboard
   - nginx
   - nagios
   - nrpe
