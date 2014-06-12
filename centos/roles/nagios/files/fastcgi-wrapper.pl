@@ -2,19 +2,17 @@
 
 # This file was retrieved from
 # https://www.ruby-forum.com/attachment/1583/fastcgi-wrapper.pl
-# on May 31, 2014.
+# on May 31, 2014 and modified slightly for use in haskell.org infra.
 
 use FCGI;
-#perl -MCPAN -e 'install FCGI'
 use Socket;
 use POSIX qw(setsid);
-#use Fcntl;
 
 require 'syscall.ph';
 
 &daemonize;
 
-#this keeps the program alive or something after exec'ing perl scripts
+# This keeps the program alive or something after exec'ing perl scripts
 END() { } BEGIN() { }
 *CORE::GLOBAL::exit = sub { die "fakeexit\nrc=".shift()."\n"; }; 
 eval q{exit}; 
@@ -33,8 +31,7 @@ sub daemonize() {
 }
 
 sub main {
-        #$socket = FCGI::OpenSocket( "127.0.0.1:8999", 10 ); #use IP sockets
-        $socket = FCGI::OpenSocket( "/var/run/nginx/perl_cgi-dispatch.sock", 10 ); #use UNIX sockets - user running this script must have w access to the 'nginx' folder!!
+        $socket = FCGI::OpenSocket( "127.0.0.1:8999", 10 ); #use IP sockets
         $request = FCGI::Request( \*STDIN, \*STDOUT, \*STDERR, \%req_params, $socket );
         if ($request) { request_loop()};
             FCGI::CloseSocket( $socket );
