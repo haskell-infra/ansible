@@ -1,0 +1,9 @@
+# Use this with:
+# ansible-playbook --private-key ~/.ssh/haskell_id_rsa -i ../inventory deploy-website.yml --extra-vars='target=new-www.haskell.org'
+# replacing paths as necessary
+- name: Deploy HL
+  hosts: "{{ target }}"
+  user: root
+
+  roles:
+  - hl

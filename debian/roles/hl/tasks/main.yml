@@ -1,0 +1,79 @@
+- name: Install ppa
+  command: apt-add-repository ppa:hvr/ghc -y
+
+- name: Add /opt/ghc/7.8.2/bin/ to $PATH foreva!
+  copy: src=ghc-path.sh dest=/etc/profile.d/ghc-path.sh mode=0755
+
+- name: Add nginx repo
+  tags:
+  - nginx
+  copy: src=nginx.list dest=/etc/apt/sources.list.d/nginx.list
+
+- name: Add nginx repo key
+  tags:
+  - nginx
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+
+- name: Install packages
+  apt: update_cache=yes name={{item}} state=present
+  with_items:
+  - ghc-7.8.2
+  - cabal-install-1.20
+  - git
+  - happy
+  - libz-dev
+  - libicu-dev
+
+- name: Install nginx packages
+  apt: update_cache=yes name={{item}} state=present
+  tags:
+  - nginx
+  with_items:
+  - nginx
+
+- name: Clone hl
+  git: repo=git://github.com/haskell-infra/hl.git dest=/srv/web/hl
+
+- name: Submodules
+  command: chdir=/srv/web/hl git submodule update --init
+
+# TODO: Figure out how to nuke the annoying PATH stuff
+- name: Update cabal cache
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal update
+
+- name: Create a cabal sandbox
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal sandbox init
+
+# This will error out if already installed in the sandbox, so ignore_errors.
+- name: Install happy
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install happy
+  ignore_errors: True
+
+# This will error out if already installed in the sandbox, so ignore_errors.
+- name: Install alex
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install alex
+  ignore_errors: True
+
+# This will error out if already installed in the sandbox, so ignore_errors.
+- name: Install senza submodule
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install submodules/senza
+  ignore_errors: True
+
+- name: Install hl
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install
+
+- name: Install upstart script
+  copy: src=hl.conf dest=/etc/init/hl.conf
+
+- name: Configure nginx
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+  tags:
+  - nginx
+
+- name: Start nginx (and at boot)
+  service: name=nginx state=restarted enabled=yes
+  tags:
+  - nginx
+
+- name: Start hl (and at boot)
+  service: name=hl state=restarted enabled=yes
