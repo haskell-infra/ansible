@@ -59,6 +59,9 @@
   shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install submodules/senza
   ignore_errors: True
 
+- name: Clear static files cache
+  command: chdir=/srv/web/hl touch src/HL/Static.hs
+
 - name: Install hl
   shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install
 
