@@ -32,7 +32,7 @@
   - nginx
 
 - name: Clone hl
-  git: repo=git://github.com/haskell-infra/hl.git dest=/srv/web/hl
+  git: repo=git://github.com/haskell-infra/hl.git dest=/srv/web/hl accept_hostkey=yes
 
 - name: Submodules
   command: chdir=/srv/web/hl git submodule update --init
@@ -52,11 +52,6 @@
 # This will error out if already installed in the sandbox, so ignore_errors.
 - name: Install alex
   shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install alex
-  ignore_errors: True
-
-# This will error out if already installed in the sandbox, so ignore_errors.
-- name: Install senza submodule
-  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install submodules/senza
   ignore_errors: True
 
 - name: Clear static files cache
