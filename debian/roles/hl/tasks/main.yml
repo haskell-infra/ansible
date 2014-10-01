@@ -1,7 +1,7 @@
 - name: Install ppa
   command: apt-add-repository ppa:hvr/ghc -y
 
-- name: Add /opt/ghc/7.8.2/bin/ to $PATH foreva!
+- name: Add ghc to $PATH foreva!
   copy: src=ghc-path.sh dest=/etc/profile.d/ghc-path.sh mode=0755
 
 - name: Add nginx repo
@@ -17,7 +17,7 @@
 - name: Install packages
   apt: update_cache=yes name={{item}} state=present
   with_items:
-  - ghc-7.8.2
+  - ghc-7.8.3
   - cabal-install-1.20
   - git
   - happy
@@ -39,26 +39,26 @@
 
 # TODO: Figure out how to nuke the annoying PATH stuff
 - name: Update cabal cache
-  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal update
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal update
 
 - name: Create a cabal sandbox
-  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal sandbox init
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal sandbox init
 
 # This will error out if already installed in the sandbox, so ignore_errors.
 - name: Install happy
-  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install happy
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal install happy
   ignore_errors: True
 
 # This will error out if already installed in the sandbox, so ignore_errors.
 - name: Install alex
-  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install alex
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal install alex
   ignore_errors: True
 
 - name: Clear static files cache
   command: chdir=/srv/web/hl touch src/HL/Static.hs
 
 - name: Install hl
-  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.2/bin/:/opt/cabal/1.20/bin/" cabal install
+  shell: chdir=/srv/web/hl PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal install
 
 - name: Install upstart script
   copy: src=hl.conf dest=/etc/init/hl.conf
