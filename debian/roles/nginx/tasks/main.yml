@@ -1,0 +1,16 @@
+- name: Add nginx repo
+  copy: src=nginx.list dest=/etc/apt/sources.list.d/nginx.list
+
+- name: Add nginx repo key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+
+- name: Install nginx packages
+  apt: update_cache=yes name={{item}} state=present
+  with_items:
+  - nginx
+
+- name: Configure nginx
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+
+- name: Start nginx at boot
+  service: name=nginx enabled=yes
