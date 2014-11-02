@@ -6,4 +6,5 @@
   user: root
 
   roles:
+  - ghc78
   - hl

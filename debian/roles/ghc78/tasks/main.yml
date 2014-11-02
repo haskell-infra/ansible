@@ -1,0 +1,14 @@
+- name: Install ppa
+  command: apt-add-repository ppa:hvr/ghc -y
+
+- name: Add ghc to $PATH foreva!
+  copy: src=ghc-path.sh dest=/etc/profile.d/ghc-path.sh mode=0755
+
+- name: Install GHC and common GHC-needed packages
+  apt: update_cache=yes name={{item}} state=present
+  with_items:
+  - ghc-7.8.3
+  - cabal-install-1.20
+  - happy
+  - libz-dev
+  - libicu-dev
