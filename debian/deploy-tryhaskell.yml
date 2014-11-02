@@ -1,0 +1,11 @@
+# Use this with:
+# ansible-playbook --private-key ~/.ssh/haskell_id_rsa -i ../inventory deploy-tryhaskell.yml --extra-vars='target=try.haskell.org'
+# replacing paths as necessary
+- name: Deploy TryHaskell
+  hosts: "{{ target }}"
+  user: root
+
+  roles:
+  - ghc78
+  - nginx
+  - tryhaskell

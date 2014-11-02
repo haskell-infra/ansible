@@ -1,0 +1,42 @@
+- name: Install git
+  apt: update_cache=yes name={{item}} state=present
+  with_items:
+  - git
+
+- name: Clone tryhaskell
+  git: repo=git://github.com/chrisdone/tryhaskell.git dest=/srv/web/tryhaskell accept_hostkey=yes
+
+- name: Submodules, if any
+  command: chdir=/srv/web/tryhaskell git submodule update --init
+
+- name: Clone mueval
+  git: repo=git://github.com/gwern/mueval.git dest=/srv/web/mueval accept_hostkey=yes
+
+# TODO: Figure out how to nuke the annoying PATH stuff
+- name: Update cabal cache
+  shell: chdir=/srv/web/tryhaskell PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal update
+
+- name: Create a cabal sandbox
+  shell: chdir=/srv/web/tryhaskell PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal sandbox init
+
+- name: Install everything
+  shell: chdir=/srv/web/tryhaskell PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal install /srv/web/mueval/ tryhaskell.cabal
+
+- name: Hide monads-tf
+  shell: chdir=/srv/web/tryhaskell PATH="$PATH:/opt/ghc/7.8.3/bin/:/opt/cabal/1.20/bin/" cabal sandbox hc-pkg hide monads-tf
+
+- name: Install upstart script
+  copy: src=tryhaskell.conf dest=/etc/init/tryhaskell.conf
+
+- name: Configure nginx
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+  tags:
+  - nginx
+
+- name: (re)start nginx
+  service: name=nginx state=restarted
+  tags:
+  - nginx
+
+- name: Start tryhaskell (and at boot)
+  service: name=tryhaskell state=restarted enabled=yes
