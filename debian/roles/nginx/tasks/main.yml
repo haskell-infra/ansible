@@ -9,8 +9,5 @@
   with_items:
   - nginx
 
-- name: Configure nginx
-  copy: src=nginx.conf dest=/etc/nginx/nginx.conf
-
 - name: Start nginx at boot
   service: name=nginx enabled=yes
